@@ -5,8 +5,8 @@
 ## Environment
 
 1. OS: Ubuntu Linux 16.04
-2. Database: dockerized Microsoft SQL Server (please note its license requirement)
-3. Search engine: Elastic Search 5.4
+2. Database (local): dockerized Microsoft SQL Server (please note its license requirement)
+3. Search engine (local): Elastic Search 5.4
 
 ## Configure dependency
 
@@ -59,17 +59,6 @@ wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.zi
 unzip elasticsearch-5.4.0.zip
 cd elasticsearch-5.4.0
 ./bin/elasticsearch -d -p pid
-# Create Elastic search index
-curl -XPUT 'localhost:9200/demo_index?pretty' -H 'Content-Type: application/json' -d'
-{
-    "settings" : {
-        "index" : {
-            "number_of_shards" : 3,
-            "number_of_replicas" : 0
-        }
-    }
-}
-'
 ```
 9. Install Kibana
 ```
@@ -92,7 +81,7 @@ unzip master.zip
 cd cogstack-master/
 ./gradlew build
 ```
-3. Create DB schema for CogStack job status and sample demo data
+3. Create DB schema for CogStack job status and sample demo data. Replace `<container-id>` with what you find in `docker ps`
 ```
 # CogStack job status tables
 wget https://raw.githubusercontent.com/spring-projects/spring-batch/master/spring-batch-core/src/main/resources/org/springframework/batch/core/schema-sqlserver.sql
@@ -107,13 +96,26 @@ wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master
 docker cp insert-to-input-table.sql <container-id>:/insert-to-input-table.sql
 docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /insert-to-input-table.sql
 ```
-4. Download demo configuration file
+4. Create Elastic search index
+```
+curl -XPUT 'localhost:9200/demo_index?pretty' -H 'Content-Type: application/json' -d'
+{
+    "settings" : {
+        "index" : {
+            "number_of_shards" : 3,
+            "number_of_replicas" : 0
+        }
+    }
+}
+'
+```
+5. Download demo configuration file
 ```
 mkdir demo-config
 cd demo-config
 wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/demo.properties
 ```
-5. Run CogStack
+6. Run CogStack
 ```
 cd ..
 wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/run-cogstack.sh
