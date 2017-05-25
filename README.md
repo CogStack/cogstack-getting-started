@@ -14,23 +14,23 @@
 ```
 sudo apt-get update
 ```
-1. Install Java 8
+2. Install Java 8
 ```
 sudo apt-get install openjdk-8-jdk-headless
 ```
-1. Install Tesseract
+3. Install Tesseract
 ```
 sudo apt-get install tesseract-ocr
 ```
-1. Install Imagemagick
+4. Install Imagemagick
 ```
 sudo apt-get install imagemagick
 ```
-1. Install unzip
+5. Install unzip
 ```
 sudo apt-get install unzip
 ```
-1. Install Docker (for dockerized MS SQL Server), follow https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository
+6. Install Docker (for dockerized MS SQL Server), follow https://docs.docker.com/engine/installation/linux/ubuntu/#install-using-the-repository . **Afterwards,log-out and log-in again.**
 ```
 sudo apt-get install \
     apt-transport-https \
@@ -48,28 +48,12 @@ sudo apt-get install docker-ce
 # Enable docker without sudo
 sudo usermod -aG docker $(whoami)
 ```
-**Then log-out and log-in again**
-1. Install Microsoft SQL server for Linux (ref: https://hub.docker.com/r/microsoft/mssql-server-linux/)
+7. Install and run Microsoft SQL server for Linux (ref: https://hub.docker.com/r/microsoft/mssql-server-linux/)
 ```
 docker pull microsoft/mssql-server-linux
 docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d microsoft/mssql-server-linux
 ```
-1. Create DB schema for CogStack job status and sample demo data
-```
-# CogStack job status tables
-wget https://raw.githubusercontent.com/spring-projects/spring-batch/master/spring-batch-core/src/main/resources/org/springframework/batch/core/schema-sqlserver.sql
-docker cp schema-sqlserver.sql <container-id>:/schema-sqlserver.sql
-docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /schema-sqlserver.sql
-# Create sample input table
-wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/create-input-table.sql
-docker cp create-input-table.sql <container-id>:/create-input-table.sql
-docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /create-input-table.sql
-# Populate sample input table
-wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/insert-to-input-table.sql
-docker cp insert-to-input-table.sql <container-id>:/insert-to-input-table.sql
-docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /insert-to-input-table.sql
-```
-1. Elastic Search (ref: https://www.elastic.co/guide/en/elasticsearch/reference/current/zip-targz.html)
+8. Elastic Search (ref: https://www.elastic.co/guide/en/elasticsearch/reference/current/zip-targz.html)
 ```
 wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.4.0.zip
 unzip elasticsearch-5.4.0.zip
@@ -87,7 +71,7 @@ curl -XPUT 'localhost:9200/demo_index?pretty' -H 'Content-Type: application/json
 }
 '
 ```
-1. Install Kibana
+9. Install Kibana
 ```
 wget https://artifacts.elastic.co/downloads/kibana/kibana-5.4.0-linux-x86_64.tar.gz
 tar xzpf kibana-5.4.0-linux-x86_64.tar.gz
@@ -108,13 +92,28 @@ unzip master.zip
 cd cogstack-master/
 ./gradlew build
 ```
-3. Download demo configuration file
+3. Create DB schema for CogStack job status and sample demo data
+```
+# CogStack job status tables
+wget https://raw.githubusercontent.com/spring-projects/spring-batch/master/spring-batch-core/src/main/resources/org/springframework/batch/core/schema-sqlserver.sql
+docker cp schema-sqlserver.sql <container-id>:/schema-sqlserver.sql
+docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /schema-sqlserver.sql
+# Create sample input table
+wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/create-input-table.sql
+docker cp create-input-table.sql <container-id>:/create-input-table.sql
+docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /create-input-table.sql
+# Populate sample input table
+wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/insert-to-input-table.sql
+docker cp insert-to-input-table.sql <container-id>:/insert-to-input-table.sql
+docker exec -it <container-id> /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'yourStrong(!)Password' -i /insert-to-input-table.sql
+```
+4. Download demo configuration file
 ```
 mkdir demo-config
 cd demo-config
 wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/demo.properties
 ```
-4. Run CogStack
+5. Run CogStack
 ```
 cd ..
 wget https://raw.githubusercontent.com/hkkenneth/cogstack-getting-started/master/run-cogstack.sh
