@@ -1,4 +1,5 @@
-# cogstack-getting-started
+# cogstack-getting-started  [DEPRECATED!] [see WIKI for setup instructions ](https://cogstack.atlassian.net/wiki/spaces/COGDOC/overview)
+
 
 # Step-by-step guide to install and configure CogStack
 
